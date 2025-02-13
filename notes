@@ -1,0 +1,51 @@
+// **Schema Settings**:
+
+// Create a virtual called `friendCount` that retrieves the length of the user's `friends` array field on query.
+
+//   ```javascript
+//   const userSchema = new mongoose.Schema({
+//     username: {
+//       type: String,
+//       unique: true,
+//       required: true,/*  */
+//       trim: true
+    // },
+//     email: {
+//       type: String,
+//       required: true,
+//       unique: true,
+//       match: [/.+@.+\..+/, 'Must match a valid email address']
+//     },
+//     thoughts: [
+//       {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: 'Thought'
+//       }
+//     ],
+//     friends: [
+//       {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: 'User'
+//       }
+//     ]
+//   },
+//   {
+//     toJSON: {
+//       virtuals: true,
+//     },
+//     id: false
+//   });
+
+//   // Create a virtual property `friendCount` that gets the number of friends
+//   userSchema.virtual('friendCount').get(function() {
+//     return this.friends.length;
+//   });
+
+//   const User = mongoose.model('User', userSchema);
+
+//   module.exports = User;
+//   ```
+
+//   This code snippet defines a virtual property `friendCount` on the `User` schema that returns the length of the `friends` array.
+
+// ---
