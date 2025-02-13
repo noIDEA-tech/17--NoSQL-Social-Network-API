@@ -1,66 +1,76 @@
-//code from GitHub co-pilot
+import { Schema, model, Document, ObjectId, Types } from 'mongoose';
 
-import { Schema, model, Document } from 'mongoose';
+// interface for Reaction (subdocument)
+interface IReaction {
+    reactionId: ObjectId;
+    reactionBody: string;
+    username: string;
+    createdAt: Date;
+}
 
-// Define the schema for reactions
-const reactionSchema = new Schema({
-    reactionId: {
-        type: Schema.Types.ObjectId,
-        default: () => new Types.ObjectId(),
+// interface for thougth doc
+interface IThought extends Document {
+    thoughtText: string;
+    createdAt: Date;
+    username: string;
+    reactions: IReaction[];
+    reactionCount?: number; //virtual
+}
+
+const reactionSchema = new Schema<IReaction>({
+     reactionId: {
+      type: Schema.Types.ObjectId,
+      default: () => new Types.ObjectId()
     },
-    reactionBody: {
-        type: String,
-        required: true,
-        maxlength: 280,
+     reactionBody: {
+      type: String,
+      required: true,
+      maxlength: 280
     },
-    username: {
-        type: String,
-        required: true,
+     username: {
+      type: String,
+      required: true
     },
     createdAt: {
-        type: Date,
-        default: Date.now,
-        get: (timestamp: Date) => timestamp.toISOString(),
-    },
-}, {
-    toJSON: {
-        getters: true,
-    },
-    id: false,
+      type: Date,
+      default: Date.now,
+      get: (timestamp: Date) => new Date(timestamp)
+    }
 });
 
 // Define the schema for thoughts
-const thoughtSchema = new Schema({
+const thoughtSchema = new Schema<IThought>({
     thoughtText: {
-        type: String,
-        required: true,
-        minlength: 1,
-        maxlength: 280,
+      type: String,
+      required: true,
+      minlength: 1,
+      maxlength: 280
     },
     createdAt: {
-        type: Date,
-        default: Date.now,
-        get: (timestamp: Date) => timestamp.toISOString(),
+      type: Date,
+      default: Date.now,
+      get: (timestamp: Date) => new Date(timestamp)
     },
     username: {
-        type: String,
-        required: true,
+      type: String,
+      required: true
     },
-    reactions: [reactionSchema],
-}, {
+    reactions: [reactionSchema]
+  }, 
+  {
     toJSON: {
-        virtuals: true,
-        getters: true,
+      virtuals: true,
+      getters: true
     },
-    id: false,
+    id: false      
 });
 
 // Virtual to get the reaction count
-thoughtSchema.virtual('reactionCount').get(function() {
-    return this.reactions.length;
+thoughtSchema.virtual('reactionCount').get(function(this: IThought) {
+    return this.reactions?.length || 0;
 });
 
 // Create the Thought model
-const Thought = model<Document & { thoughtText: string, username: string, reactions: typeof reactionSchema[] }>('Thought', thoughtSchema);
+const Thought = model<IThought>('Thought', thoughtSchema);
 
 export default Thought;
