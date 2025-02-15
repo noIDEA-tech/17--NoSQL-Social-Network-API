@@ -4,7 +4,8 @@ import thoughtRoutes from './api/thoughtRoutes';
 
 const router = Router();
 
-router.use('/users', userRoutes);
-router.use('/thoughts', thoughtRoutes);
+// Add /api prefix to routes
+router.use('/api/users', userRoutes);
+router.use('/api/thoughts', thoughtRoutes);
 
 export default router;
